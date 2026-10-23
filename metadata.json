@@ -1,0 +1,6 @@
+{
+  "name": "TrailerGuard DMS - Driver Drowsiness Defense",
+  "description": "Real-time driver fatigue and drowsiness detection system for commercial trailer operators with live vision tracking, multi-stage alarms, and voice alerts.",
+  "requestFramePermissions": ["camera"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

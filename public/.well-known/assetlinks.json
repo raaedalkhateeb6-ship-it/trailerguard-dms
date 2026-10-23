@@ -1,0 +1,13 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.trailerguard.dms",
+      "sha256_cert_fingerprints": [
+        "14:6D:E9:7D:0C:52:AB:71:6C:54:E5:60:92:43:57:A8:14:48:67:8F:A3:A3:34:3E:45:AC:12:05:43:03:7E:62",
+        "REPLACE_WITH_YOUR_RELEASE_KEYSTORE_OR_GOOGLE_PLAY_APP_SIGNING_SHA256"
+      ]
+    }
+  }
+]

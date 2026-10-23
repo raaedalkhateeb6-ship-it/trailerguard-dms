@@ -1,0 +1,26 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-arabic: 'Cairo', 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+[dir="rtl"] {
+  font-family: var(--font-arabic);
+}
+
+
+@keyframes pulse-alarm {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+  }
+  50% {
+    box-shadow: 0 0 40px 15px rgba(239, 68, 68, 0.95);
+  }
+}
+
+.animate-alarm-flash {
+  animation: pulse-alarm 0.5s infinite;
+}
+

@@ -1,0 +1,135 @@
+import sharp from 'sharp';
+import fs from 'fs';
+import path from 'path';
+
+const publicDir = path.resolve('public');
+if (!fs.existsSync(publicDir)) {
+  fs.mkdirSync(publicDir, { recursive: true });
+}
+
+// Crisp tactical brand SVG for TrailerGuard DMS
+const svgContent = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#020617" />
+      <stop offset="50%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#020617" />
+    </linearGradient>
+    <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f59e0b" />
+      <stop offset="60%" stop-color="#d97706" />
+      <stop offset="100%" stop-color="#b45309" />
+    </linearGradient>
+    <linearGradient id="eyeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="100%" stop-color="#0284c7" />
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Background base -->
+  <rect width="512" height="512" rx="104" fill="url(#bgGrad)" />
+
+  <!-- Outer radar ring -->
+  <circle cx="256" cy="256" r="210" fill="none" stroke="#1e293b" stroke-width="4" stroke-dasharray="8 8" />
+  <circle cx="256" cy="256" r="170" fill="none" stroke="#f59e0b" stroke-width="2" opacity="0.3" />
+
+  <!-- Security Shield Boundary -->
+  <path d="M256 70 L390 125 C390 270 256 395 256 425 C256 395 122 270 122 125 Z"
+        fill="#0b1329" stroke="url(#shieldGrad)" stroke-width="10" stroke-linejoin="round" filter="url(#glow)"/>
+
+  <!-- Truck Cab Silhouette (Top / Center) -->
+  <path d="M200 175 L312 175 L328 220 L336 220 C342 220 346 225 346 231 L346 265 C346 270 342 274 336 274 L330 274 C326 265 316 260 305 260 C294 260 284 265 280 274 L232 274 C228 265 218 260 207 260 C196 260 186 265 182 274 L176 274 C170 274 166 270 166 265 L166 235 L180 220 L188 175 Z"
+        fill="#1e293b" stroke="#475569" stroke-width="3" />
+  <!-- Truck Windshield -->
+  <polygon points="210,185 302,185 292,215 220,215" fill="#0284c7" opacity="0.85" />
+
+  <!-- DMS AI Vigilant Eye Aperture -->
+  <path d="M176 295 Q256 225 336 295 Q256 365 176 295 Z" fill="#030712" stroke="#f59e0b" stroke-width="6" />
+  <circle cx="256" cy="295" r="28" fill="url(#eyeGrad)" />
+  <circle cx="256" cy="295" r="14" fill="#020617" />
+  <circle cx="262" cy="289" r="6" fill="#ffffff" />
+
+  <!-- Pulse status indicator dot -->
+  <circle cx="256" cy="385" r="8" fill="#10b981" />
+  <circle cx="256" cy="385" r="14" fill="none" stroke="#10b981" stroke-width="2" opacity="0.6" />
+</svg>`;
+
+// Safe-zone padded maskable version (extra margin for Android circle/squircle masking)
+const maskableSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#020617" />
+      <stop offset="50%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#020617" />
+    </linearGradient>
+    <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f59e0b" />
+      <stop offset="60%" stop-color="#d97706" />
+      <stop offset="100%" stop-color="#b45309" />
+    </linearGradient>
+    <linearGradient id="eyeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="100%" stop-color="#0284c7" />
+    </linearGradient>
+  </defs>
+
+  <!-- Full-bleed background -->
+  <rect width="512" height="512" fill="url(#bgGrad)" />
+
+  <!-- Scaled inside 80% safe zone circle (scale 0.78 around center 256, 256) -->
+  <g transform="translate(56, 56) scale(0.78)">
+    <circle cx="256" cy="256" r="210" fill="none" stroke="#1e293b" stroke-width="4" stroke-dasharray="8 8" />
+    <circle cx="256" cy="256" r="170" fill="none" stroke="#f59e0b" stroke-width="2" opacity="0.3" />
+
+    <path d="M256 70 L390 125 C390 270 256 395 256 425 C256 395 122 270 122 125 Z"
+          fill="#0b1329" stroke="url(#shieldGrad)" stroke-width="12" stroke-linejoin="round" />
+
+    <path d="M200 175 L312 175 L328 220 L336 220 C342 220 346 225 346 231 L346 265 C346 270 342 274 336 274 L330 274 C326 265 316 260 305 260 C294 260 186 265 182 274 L176 274 C170 274 166 270 166 265 L166 235 L180 220 L188 175 Z"
+          fill="#1e293b" stroke="#475569" stroke-width="3" />
+    <polygon points="210,185 302,185 292,215 220,215" fill="#0284c7" opacity="0.85" />
+
+    <path d="M176 295 Q256 225 336 295 Q256 365 176 295 Z" fill="#030712" stroke="#f59e0b" stroke-width="6" />
+    <circle cx="256" cy="295" r="28" fill="url(#eyeGrad)" />
+    <circle cx="256" cy="295" r="14" fill="#020617" />
+    <circle cx="262" cy="289" r="6" fill="#ffffff" />
+
+    <circle cx="256" cy="385" r="8" fill="#10b981" />
+  </g>
+</svg>`;
+
+async function run() {
+  fs.writeFileSync(path.join(publicDir, 'icon.svg'), svgContent);
+  console.log('Saved public/icon.svg');
+
+  const svgBuffer = Buffer.from(svgContent);
+  const maskableBuffer = Buffer.from(maskableSvg);
+
+  // 1. icon-512.png
+  await sharp(svgBuffer).resize(512, 512).png().toFile(path.join(publicDir, 'icon-512.png'));
+  console.log('Generated icon-512.png');
+
+  // 2. icon-192.png
+  await sharp(svgBuffer).resize(192, 192).png().toFile(path.join(publicDir, 'icon-192.png'));
+  console.log('Generated icon-192.png');
+
+  // 3. icon-maskable-512.png
+  await sharp(maskableBuffer).resize(512, 512).png().toFile(path.join(publicDir, 'icon-maskable-512.png'));
+  console.log('Generated icon-maskable-512.png');
+
+  // 4. apple-touch-icon.png (180x180)
+  await sharp(svgBuffer).resize(180, 180).png().toFile(path.join(publicDir, 'apple-touch-icon.png'));
+  console.log('Generated apple-touch-icon.png');
+
+  // 5. favicon-32.png
+  await sharp(svgBuffer).resize(32, 32).png().toFile(path.join(publicDir, 'favicon-32.png'));
+  console.log('Generated favicon-32.png');
+}
+
+run().catch(err => {
+  console.error(err);
+  process.exit(1);
+});
