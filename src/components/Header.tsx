@@ -1,5 +1,5 @@
 import React from 'react';
-import { ShieldAlert, Volume2, Maximize2, Minimize2, Languages, Play } from 'lucide-react';
+import { ShieldAlert, Volume2, Maximize2, Minimize2, Languages } from 'lucide-react';
 import { Translations, Language } from '../i18n/translations';
 
 interface HeaderProps {
@@ -13,7 +13,7 @@ interface HeaderProps {
   onToggleFullscreen: () => void;
   language: Language;
   onToggleLanguage: () => void;
-  onOpenGooglePlay: () => void;
+  onOpenGooglePlay?: () => void;
   t: Translations;
 }
 
@@ -28,7 +28,6 @@ export const Header: React.FC<HeaderProps> = ({
   onToggleFullscreen,
   language,
   onToggleLanguage,
-  onOpenGooglePlay,
   t,
 }) => {
   return (
@@ -99,14 +98,6 @@ export const Header: React.FC<HeaderProps> = ({
 
       {/* Zone 3: 1 primary action button + language toggle + fullscreen helper */}
       <div className="flex items-center gap-2.5 shrink-0">
-        <button
-          onClick={onOpenGooglePlay}
-          className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold text-emerald-300 hover:text-white bg-emerald-950/60 hover:bg-emerald-900/70 border border-emerald-500/40 transition-colors cursor-pointer shadow-sm shadow-emerald-950/50"
-          title={language === 'ar' ? 'تجهيز لـ Google Play' : 'Google Play Package'}
-        >
-          <Play className="w-3.5 h-3.5 fill-emerald-400 text-emerald-400" />
-          <span className="hidden sm:inline">Google Play</span>
-        </button>
 
         <button
           onClick={onToggleLanguage}
