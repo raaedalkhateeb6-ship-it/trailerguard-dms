@@ -52,8 +52,31 @@ jobs:
           chmod +x gradlew
           ./gradlew assembleDebug --no-daemon
 
+      - name: Build & Sign Release AAB for Google Play
+        run: |
+          keytool -genkey -v -keystore release.jks -keyalg RSA -keysize 2048 -validity 10000 -alias trailerguard -dname "CN=TrailerGuard DMS, OU=Mobile, O=TrailerGuard, C=US" -storepass trailerguard123 -keypass trailerguard123
+          cd android
+          ./gradlew bundleRelease --no-daemon
+          cd ..
+          AAB_FILE=$(find android/app/build/outputs/bundle/release -name "*.aab" | head -n 1)
+          if [ -n "$AAB_FILE" ]; then
+            echo "Signing $AAB_FILE..."
+            jarsigner -verbose -sigalg SHA256withRSA -digestalg SHA-256 -keystore release.jks -storepass trailerguard123 -keypass trailerguard123 "$AAB_FILE" trailerguard
+            cp "$AAB_FILE" ./TrailerGuard-DMS-release.aab
+            cp release.jks ./TrailerGuard-Keystore.jks
+            echo "AAB successfully generated and signed."
+          fi
+
       - name: Upload Generated APK
         uses: actions/upload-artifact@v4
         with:
           name: TrailerGuard-DMS-APK
           path: android/app/build/outputs/apk/debug/app-debug.apk
+
+      - name: Upload Google Play AAB Bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: TrailerGuard-GooglePlay-AAB
+          path: |
+            TrailerGuard-DMS-release.aab
+            TrailerGuard-Keystore.jks
