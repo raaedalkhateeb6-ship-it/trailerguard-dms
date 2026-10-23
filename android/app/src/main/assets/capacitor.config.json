@@ -1,0 +1,8 @@
+{
+	"appId": "com.trailerguard.dms",
+	"appName": "TrailerGuard DMS",
+	"webDir": "dist",
+	"server": {
+		"androidScheme": "https"
+	}
+}
